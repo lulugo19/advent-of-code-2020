@@ -19,8 +19,7 @@ impl Password {
     }
 }
 
-#[aoc_generator(day2, part1)]
-#[aoc_generator(day2, part2)]
+#[aoc_generator(day2)]
 pub fn input_generator(input: &str) -> Vec<Password> {
     let re =
         Regex::new(r"^(?P<a>\d+)-(?P<b>\d+) (?P<letter>[a-z]): (?P<password>[a-z]+)$").unwrap();

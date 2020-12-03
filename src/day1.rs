@@ -2,8 +2,7 @@ use std::collections::HashSet;
 
 const GOAL: i64 = 2020;
 
-#[aoc_generator(day1, part1)]
-#[aoc_generator(day1, part2)]
+#[aoc_generator(day1)]
 pub fn input_generator_day1(input: &str) -> HashSet<i64> {
     input.lines().map(|l| l.parse::<i64>().unwrap()).collect()
 }
