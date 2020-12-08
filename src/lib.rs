@@ -1,3 +1,5 @@
+use std::{error::Error, fmt};
+
 extern crate aoc_runner;
 
 #[macro_use]
@@ -14,5 +16,15 @@ pub mod day4;
 pub mod day5;
 pub mod day6;
 pub mod day7;
+pub mod day8;
+
+#[derive(Debug)]
+pub struct NoSolutionErr {}
+impl std::fmt::Display for NoSolutionErr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("no solution")
+    }
+}
+impl Error for NoSolutionErr {}
 
 aoc_lib! { year = 2020 }
