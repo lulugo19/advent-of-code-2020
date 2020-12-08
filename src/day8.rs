@@ -56,6 +56,9 @@ pub fn solve_part2(program: &Program) -> Result<i32, NoSolutionErr> {
         while change_index < program.len() && program[change_index].0 == Operation::Acc {
             change_index += 1;
         }
+        if change_index >= program.len() {
+            break;
+        }
         let prev_instr = program[change_index];
         let changed_op = match prev_instr.0 {
             Operation::Jmp => Operation::Nop,
