@@ -83,18 +83,20 @@ mod tests {
 
     use super::{solve_part1, solve_part2};
 
+    const TEST_INPUT: &'static str = "L.LL.LL.LL\n\
+    LLLLLLL.LL\n\
+    L.L.L..L..\n\
+    LLLL.LL.LL\n\
+    L.LL.LL.LL\n\
+    L.LLLLL.LL\n\
+    ..L.L.....\n\
+    LLLLLLLLLL\n\
+    L.LLLLLL.L\n\
+    L.LLLLL.LL";
+
     #[test]
     fn test_day11_part1() {
-        let seat_layout: Vec<Vec<char>> = "L.LL.LL.LL\n\
-        LLLLLLL.LL\n\
-        L.L.L..L..\n\
-        LLLL.LL.LL\n\
-        L.LL.LL.LL\n\
-        L.LLLLL.LL\n\
-        ..L.L.....\n\
-        LLLLLLLLLL\n\
-        L.LLLLLL.L\n\
-        L.LLLLL.LL"
+        let seat_layout: Vec<Vec<char>> = TEST_INPUT
             .lines()
             .map(|line| line.chars().collect())
             .collect();
@@ -104,16 +106,7 @@ mod tests {
 
     #[test]
     fn test_day11_part2() {
-        let seat_layout: Vec<Vec<char>> = "L.LL.LL.LL\n\
-        LLLLLLL.LL\n\
-        L.L.L..L..\n\
-        LLLL.LL.LL\n\
-        L.LL.LL.LL\n\
-        L.LLLLL.LL\n\
-        ..L.L.....\n\
-        LLLLLLLLLL\n\
-        L.LLLLLL.L\n\
-        L.LLLLL.LL"
+        let seat_layout: Vec<Vec<char>> = TEST_INPUT
             .lines()
             .map(|line| line.chars().collect())
             .collect();

@@ -65,49 +65,49 @@ mod tests {
     use super::get_jolts_difference_count;
     use super::solve_day2;
 
-    fn test_solve_day1(adapters: &mut Vec<u32>, expected: (u32, u32)) {
-        adapters.sort();
+    lazy_static! {
+        static ref TEST_INPUT_SMALL: Vec<u32> = {
+            let mut input = vec![16, 10, 15, 5, 1, 11, 7, 19, 6, 12, 4];
+            input.sort();
+            input
+        };
+        static ref TEST_INPUT_LARGER: Vec<u32> = {
+            let mut input = vec![
+                28, 33, 18, 42, 31, 14, 46, 20, 48, 47, 24, 23, 49, 45, 19, 38, 39, 11, 1, 32, 25,
+                35, 8, 17, 7, 9, 4, 2, 34, 10, 3,
+            ];
+            input.sort();
+            input
+        };
+    }
+
+    fn test_solve_day1(adapters: &Vec<u32>, expected: (u32, u32)) {
         let diff_count = get_jolts_difference_count(&adapters);
         assert_eq!(diff_count[0], expected.0);
         assert_eq!(diff_count[2], expected.1);
     }
 
-    fn test_solve_day_2(adapters: &mut Vec<u32>, expected: u64) {
-        adapters.sort();
+    fn test_solve_day_2(adapters: &Vec<u32>, expected: u64) {
         assert_eq!(solve_day2(&adapters), expected);
     }
 
     #[test]
     fn test_day10_part1_small() {
-        let mut adapters = vec![16, 10, 15, 5, 1, 11, 7, 19, 6, 12, 4];
-
-        test_solve_day1(&mut adapters, (7, 5));
+        test_solve_day1(&TEST_INPUT_SMALL, (7, 5));
     }
 
     #[test]
     fn test_day10_part1_larger() {
-        let mut adapters = vec![
-            28, 33, 18, 42, 31, 14, 46, 20, 48, 47, 24, 23, 49, 45, 19, 38, 39, 11, 1, 32, 25, 35,
-            8, 17, 7, 9, 4, 2, 34, 10, 3,
-        ];
-
-        test_solve_day1(&mut adapters, (22, 10));
+        test_solve_day1(&TEST_INPUT_LARGER, (22, 10));
     }
 
     #[test]
     fn test_day10_part2_small() {
-        let mut adapters = vec![16, 10, 15, 5, 1, 11, 7, 19, 6, 12, 4];
-
-        test_solve_day_2(&mut adapters, 8);
+        test_solve_day_2(&TEST_INPUT_SMALL, 8);
     }
 
     #[test]
     fn test_day10_part2_larger() {
-        let mut adapters = vec![
-            28, 33, 18, 42, 31, 14, 46, 20, 48, 47, 24, 23, 49, 45, 19, 38, 39, 11, 1, 32, 25, 35,
-            8, 17, 7, 9, 4, 2, 34, 10, 3,
-        ];
-
-        test_solve_day_2(&mut adapters, 19208);
+        test_solve_day_2(&TEST_INPUT_LARGER, 19208);
     }
 }
