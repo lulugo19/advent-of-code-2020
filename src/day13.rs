@@ -47,6 +47,8 @@ pub fn solve_part1(input: &Input) -> i128 {
 
 // solving part2 using the chinese remainder theorem
 // https://en.wikipedia.org/wiki/Chinese_remainder_theorem
+// (t + i) = 0 mod id <=>
+// t = -i mod id
 #[aoc(day13, part2)]
 pub fn solve_part2(input: &Input) -> i128 {
 	let equations: Vec<(i128, i128)> = input
