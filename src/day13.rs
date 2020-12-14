@@ -58,22 +58,22 @@ pub fn solve_part2(input: &Input) -> i128 {
 		.filter_map(|(idx, bus)| bus.map(|b| ((b - idx as i128) % b, b)))
 		.collect();
 
-	let M: i128 = equations.iter().map(|(a, m)| *m).product();
+	let m_big: i128 = equations.iter().map(|(_, m)| *m).product();
 
 	let mut result = equations
 		.iter()
 		.map(|(a, m)| {
 			let mut x = 0;
 			let mut y = 0;
-			let N = M / m;
-			gcd_extended(*m, N, &mut x, &mut y);
-			a * N * y
+			let mi_big = m_big / m;
+			gcd_extended(*m, mi_big, &mut x, &mut y);
+			a * mi_big * y
 		})
 		.sum::<i128>()
-		% M;
+		% m_big;
 
 	if result < 0 {
-		result += M;
+		result += m_big;
 	}
 
 	result

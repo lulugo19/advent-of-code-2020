@@ -15,42 +15,28 @@ pub struct Mask {
 	floating_mask: u64,
 }
 
+fn decode_from_str(string: &str, x: char) -> u64 {
+	string
+		.chars()
+		.rev()
+		.enumerate()
+		.map(|(idx, c)| if c == x { 1 << (idx as u64) } else { 0 })
+		.sum()
+}
+
 impl FromStr for Mask {
 	type Err = ();
 
 	fn from_str(s: &str) -> Result<Mask, ()> {
-		let one_mask = s
-			.chars()
-			.rev()
-			.enumerate()
-			.map(|(idx, c)| if c == '1' { 1 << (idx as u64) } else { 0 })
-			.sum();
-
-		let zero_mask = s
-			.chars()
-			.rev()
-			.enumerate()
-			.map(|(idx, c)| if c == '0' { 1 << (idx as u64) } else { 0 })
-			.sum();
-
-		let floating_mask = s
-			.chars()
-			.rev()
-			.enumerate()
-			.map(|(idx, c)| if c == 'X' { 1 << (idx as u64) } else { 0 })
-			.sum();
+		let one_mask = decode_from_str(s, '1');
+		let zero_mask = decode_from_str(s, '0');
+		let floating_mask = decode_from_str(s, 'X');
 
 		Ok(Mask {
 			one_mask,
 			zero_mask,
 			floating_mask,
 		})
-	}
-}
-
-impl Mask {
-	pub fn apply_part1(&self, value: u64) -> u64 {
-		(value | self.one_mask) & (!self.zero_mask)
 	}
 }
 
@@ -86,7 +72,8 @@ pub fn solve_part1(instructions: &[Instruction]) -> u64 {
 		match instr {
 			Instruction::SetMask(m) => mask = Some(m.clone()),
 			Instruction::SetMemory { address, value } => {
-				mem.insert(*address, mask.unwrap().apply_part1(*value));
+				let mask = mask.unwrap();
+				mem.insert(*address, (value | mask.one_mask) & (!mask.zero_mask));
 			}
 		}
 	}
@@ -115,7 +102,7 @@ pub fn solve_part2(instructions: &[Instruction]) -> u64 {
 					let mut decoded_addr = decoded_addr;
 					for j in 0..len {
 						if ((1 << j) & i) != 0 {
-							decoded_addr |= (1 << float_indices[j as usize])
+							decoded_addr |= 1 << float_indices[j as usize]
 						} else {
 							decoded_addr &= !(1 << float_indices[j as usize])
 						};
@@ -131,6 +118,7 @@ pub fn solve_part2(instructions: &[Instruction]) -> u64 {
 
 const NUM_BITS: u64 = 36;
 
+// return the indices of the set ones '1' in a number
 fn get_set_bit_positions(mask: u64) -> Vec<u64> {
 	let mut positions = Vec::<u64>::with_capacity(NUM_BITS as usize);
 	for i in 0..NUM_BITS {
