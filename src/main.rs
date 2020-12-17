@@ -47,9 +47,10 @@ fn build_chart<'a>(
 	#..##.##\n\
 	#.#.####";
 
+	let cycles = if n < 7 { 6 } else { 4 };
 	println!("{} dimensions", n);
 	println!("-------------");
-	let active_count = conway_nd(n, &input_generator(INPUT, n), if n < 7 { 6 } else { 2 });
+	let active_count = conway_nd(n, &input_generator(INPUT, n), cycles);
 	println!();
 	let mut max = *active_count.iter().max().unwrap();
 	max += (max as f64 * 0.05) as usize;
@@ -57,11 +58,11 @@ fn build_chart<'a>(
 		// Set the caption of the chart
 		.caption(format!("n = {}", n), ("sans-serif", 15).into_font())
 		// Set the size of the label region
-		.x_label_area_size(40)
-		.y_label_area_size(45)
+		.x_label_area_size(37)
+		.y_label_area_size(55)
 		.margin(10)
 		// Finally attach a coordinate on the drawing area and make a chart context
-		.build_cartesian_2d((0..6).into_segmented(), 0..max)?;
+		.build_cartesian_2d((0..cycles).into_segmented(), 0..max)?;
 
 	// Then we can draw a mesh
 	chart
@@ -69,6 +70,15 @@ fn build_chart<'a>(
 		// We can customize the maximum number of labels allowed for each axis
 		.x_labels(7)
 		.y_labels(10)
+		.y_label_formatter(&|y| {
+			if *y > 10_000 {
+				format!("{} k", *y / 1000)
+			} else if *y > 1000 {
+				format!("{:.1} k", *y as f64 / 1000.0)
+			} else {
+				y.to_string()
+			}
+		})
 		.x_desc("cycle")
 		.axis_desc_style(("sans-serif", 15).into_font().style(FontStyle::Bold))
 		.y_desc("active count")
@@ -79,12 +89,7 @@ fn build_chart<'a>(
 	chart.draw_series(
 		Histogram::vertical(&chart)
 			.style(RED.mix(0.5).filled())
-			.data(
-				active_count
-					.iter()
-					.enumerate()
-					.map(|(idx, x)| (idx as i32, *x)),
-			),
+			.data(active_count.iter().enumerate().map(|(idx, x)| (idx, *x))),
 	)?;
 	Ok(())
 }
