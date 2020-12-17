@@ -75,19 +75,24 @@ fn ticket_error_rate(ticket: &Ticket, rules: &[Rule]) -> u64 {
 		.sum()
 }
 
+fn ticket_is_valid(ticket: &Ticket, rules: &[Rule]) -> bool {
+	!ticket
+		.iter()
+		.any(|x| !rules.iter().any(|r| rule_is_valid_for_field(&r.1, *x)))
+}
+
 fn rule_is_valid_for_field(rule: &[Range], field: u64) -> bool {
 	rule.iter().any(|r| field >= r.min && field <= r.max)
 }
 
 #[aoc(day16, part2)]
 pub fn solve_part2(input: &Input) -> u64 {
+	let rules = &input.rules;
 	let valid_tickets = input
 		.nearby_tickets
 		.iter()
-		.filter(|ticket| ticket_error_rate(ticket, &input.rules) == 0)
+		.filter(|ticket| ticket_is_valid(ticket, rules))
 		.collect::<Vec<_>>();
-
-	let rules = &input.rules;
 
 	let mut match_indices = rules
 		.iter()
