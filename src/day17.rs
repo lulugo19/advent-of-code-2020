@@ -41,48 +41,54 @@ pub fn conway_nd(n: usize, initial_active: &HashSet<Vec<i32>>, cycles: usize) ->
 	let mut active = initial_active.clone();
 	let mut next_active = HashSet::<Vec<i32>>::new();
 
+	let neighbour_count: u128 = u128::pow(3, n as u32);
+	let neighbour_offsets = (0..neighbour_count)
+		.map(|i| {
+			let mut x = i;
+			let mut offset = Vec::with_capacity(n);
+			for _j in 0..n {
+				offset.push((x % 3) as i32 - 1);
+				x /= 3;
+			}
+			offset
+		})
+		.collect::<Vec<_>>();
+
 	let mut active_neighbour_count: HashMap<Vec<i32>, u32> = HashMap::new();
 	let mut inactive_neighbour_count: HashMap<Vec<i32>, u32> = HashMap::new();
 
-	let neighbour_count: u128 = u128::pow(3, n as u32);
-	let mut neighbour = vec![0; n];
-
 	for i in 0..cycles {
 		next_active.clear();
-		active_neighbour_count.clear();
-		inactive_neighbour_count.clear();
 
 		for pos in active.iter() {
-			for i in 0..neighbour_count {
-				let mut x = i;
-				for j in 0..n {
-					neighbour[j] = pos[j] + ((x % 3) as i32 - 1);
-					x /= 3;
-				}
+			for offset in neighbour_offsets.iter() {
+				let neighbour = pos
+					.iter()
+					.zip(offset.iter())
+					.map(|(p, o)| p + o)
+					.collect::<Vec<_>>();
 				if *pos == neighbour {
 					continue;
 				}
 				if active.contains(&neighbour) {
-					*active_neighbour_count.entry(neighbour.clone()).or_insert(0) += 1;
+					*active_neighbour_count.entry(neighbour).or_insert(0) += 1;
 				} else {
-					*inactive_neighbour_count
-						.entry(neighbour.clone())
-						.or_insert(0) += 1;
+					*inactive_neighbour_count.entry(neighbour).or_insert(0) += 1;
 				}
 			}
 		}
 
-		next_active.extend(active_neighbour_count.iter().filter_map(|(pos, count)| {
-			if *count == 2 || *count == 3 {
-				Some(pos.clone())
+		next_active.extend(active_neighbour_count.drain().filter_map(|(pos, count)| {
+			if count == 2 || count == 3 {
+				Some(pos)
 			} else {
 				None
 			}
 		}));
 
-		next_active.extend(inactive_neighbour_count.iter().filter_map(|(pos, count)| {
-			if *count == 3 {
-				Some(pos.clone())
+		next_active.extend(inactive_neighbour_count.drain().filter_map(|(pos, count)| {
+			if count == 3 {
+				Some(pos)
 			} else {
 				None
 			}
