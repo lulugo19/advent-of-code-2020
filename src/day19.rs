@@ -163,11 +163,13 @@ fn cyk(
 	let mut matrix = vec![vec![vec![false; r]; n]; n];
 
 	for s in 0..n {
-		for (left, terminal) in terminal_rules.iter() {
-			if *terminal == chars[s] {
-				matrix[0][s][*left] = true;
-			}
-		}
+		let terminal = chars[s];
+		let left = terminal_rules
+			.iter()
+			.find(|(_, t)| *t == terminal)
+			.unwrap()
+			.0;
+		matrix[0][s][left] = true;
 	}
 
 	for l in 1..n {
