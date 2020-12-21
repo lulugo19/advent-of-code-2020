@@ -35,9 +35,9 @@ pub mod day9;
 #[derive(Debug)]
 pub struct NoSolutionErr {}
 impl std::fmt::Display for NoSolutionErr {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str("no solution")
-    }
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    f.write_str("no solution")
+  }
 }
 impl Error for NoSolutionErr {}
 
