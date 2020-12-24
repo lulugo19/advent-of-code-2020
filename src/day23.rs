@@ -81,6 +81,8 @@ fn cup_game_slow(cups: &[usize], num_moves: usize) -> String {
 // fast version of the cup game, storing the successor of a cup in a vec
 fn cup_game_fast(cups: &[usize], num_moves: usize) -> Vec<usize> {
 	let mut curr = cups[0].clone();
+
+	// add plus one to the cup size sow that we have a quasi one index array
 	let mut succ: Vec<usize> = vec![0; cups.len() + 1];
 
 	for i in 0..cups.len() {
